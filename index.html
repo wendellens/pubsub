@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pub/Sub Demo</title>
+</head>
+<body>
+  <script>
+    class PubSub {
+      constructor() {
+        this.topics = {};
+      }
+
+      subscribe(topic, listener) {
+        if (!this.topics[topic]) {
+          this.topics[topic] = [];
+        }
+        this.topics[topic].push(listener);
+      }
+
+      publish(topic, data) {
+        if (!this.topics[topic]) return;
+        this.topics[topic].forEach(listener => listener(data));
+      }
+
+      unsubscribe(topic, listener) {
+        if (!this.topics[topic]) return;
+        this.topics[topic] = this.topics[topic].filter(l => l !== listener);
+      }
+    }
+
+    const pubsub = new PubSub();
+
+    pubsub.subscribe("math", (data) => {
+      console.log("Student A received math update:", data);
+    });
+
+    pubsub.subscribe("math", (data) => {
+      console.log("Student B received math update:", data);
+    });
+
+    pubsub.publish("math", "New assignment: Algebra worksheet due Friday");
+  </script>
+</body>
+</html>

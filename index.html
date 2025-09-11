@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pub/Sub Demo</title>
+  <title>PubSub Demo</title>
 </head>
 <body>
+  <h2>📚Classroom</h2>
+
+  <button id="subscribeA">Subscribe Student A to Math</button>
+  <button id="subscribeB">Subscribe Student B to Math</button>
+  <button id="publishMath">Publish Math Topic</button>
+  <button id="clearLog">Clear Log</button>
+
+  <div id="log"></div>
+  
   <script>
     class PubSub {
       constructor() {
@@ -14,7 +23,9 @@
         if (!this.topics[topic]) {
           this.topics[topic] = [];
         }
-        this.topics[topic].push(listener);
+        if (!this.topics[topic].includes(listener)) {
+        this.topics[topic].push(listener
+        }
       }
 
       publish(topic, data) {
@@ -30,15 +41,39 @@
 
     const pubsub = new PubSub();
 
-    pubsub.subscribe("math", (data) => {
-      console.log("Student A received math update:", data);
+    function log(message) {
+      const logDiv = document.getElementById('log');
+      const entry = document.createElement('div');
+      entry.textContent = message;
+      logDiv.appendChild(entry);
+    }
+
+    function studentA(data) {
+      log(`👩‍🎓 Student A received math update: ${data}`);
+    }
+
+    function studentB(data) {
+      log(`👨‍🎓 Student B received math update: ${data}`);
+    }
+
+    document.getElementById('subscribeA').addEventListener('click', () => {
+      pubsub.subscribe("math", studentA);
+      log("✅ Student A subscribed to Math");
     });
 
-    pubsub.subscribe("math", (data) => {
-      console.log("Student B received math update:", data);
+    document.getElementById('subscribeB').addEventListener('click', () => {
+      pubsub.subscribe("math", studentB);
+      log("✅ Student B subscribed to Math");
     });
 
-    pubsub.publish("math", "New assignment: Algebra worksheet due Friday");
+    document.getElementById('publishMath').addEventListener('click', () => {
+      pubsub.publish("math", "New assignment: Algebra worksheet due Friday");
+      log("📢 Teacher published Math topic");
+    });
+
+    document.getElementById('clearLog').addEventListener('click', () => {
+      document.getElementById('log').innerHTML = "";
+    });
   </script>
 </body>
 </html>

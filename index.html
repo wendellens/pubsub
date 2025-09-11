@@ -2,12 +2,51 @@
 <html>
 <head>
   <title>PubSub Demo</title>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      pdding: 20px;
+      background-color: #fff;
+      color: #333;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 8px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e0e0e0;
+    }
+
+    #log {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background-color: #fafafa;
+    }
+
+    #log div {
+      margin-bottom: 5px;
+    }
+  </style>
+  
 </head>
 <body>
   <h2>📚Classroom</h2>
 
   <button id="subscribeA">Subscribe Student A to Math</button>
   <button id="subscribeB">Subscribe Student B to Math</button>
+  <button id="unsubscribeA">Unsubscribe Student A from Math</button>
+  <button id="unsubscribeB">Unsubscribe Student B from Math</button>
   <button id="publishMath">Publish Math Topic</button>
   <button id="clearLog">Clear Log</button>
 
@@ -24,7 +63,7 @@
           this.topics[topic] = [];
         }
         if (!this.topics[topic].includes(listener)) {
-        this.topics[topic].push(listener
+        this.topics[topic].push(listener);
         }
       }
 
@@ -36,6 +75,7 @@
       unsubscribe(topic, listener) {
         if (!this.topics[topic]) return;
         this.topics[topic] = this.topics[topic].filter(l => l !== listener);
+        log(`❌ A student was unsubscribe from "${topic}"`);
       }
     }
 
@@ -66,6 +106,14 @@
       log("✅ Student B subscribed to Math");
     });
 
+    document.getElementById('unsubscribeA').addEventListener('click', () => {
+      pubsub.unsubscribe("math", studentA);
+    });
+
+    document.getElementById('unsubscribeB').addEventListener('click', () => {
+      pubsub.unsubscribe("math", studentB);
+    });
+
     document.getElementById('publishMath').addEventListener('click', () => {
       pubsub.publish("math", "New assignment: Algebra worksheet due Friday");
       log("📢 Teacher published Math topic");
@@ -77,3 +125,4 @@
   </script>
 </body>
 </html>
+
